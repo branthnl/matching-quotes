@@ -1,0 +1,83 @@
+{
+    "levelName": "Science",
+    "correctResponse": "Great Job! Let's try the next one",
+    "incorrectResponse": "Nice try, but missed. Let's try again",
+    "defaultOptionAmount": 4,
+    "shuffleOptionPosition": true,
+    "defaultBackgroundStory": "Under research",
+    "questions": [
+        {
+            "q": "Imagination is more important than knowledge.",
+            "options": [
+                "Albert Einstein",
+                "George Clooney",
+                "Isaac Asimov",
+                "John Clayton"
+            ],
+            "correctIndex": 0,
+            "backgroundStory": "Albert Einstein, one of the greatest minds of our time, once said, “Imagination is more important than knowledge. For knowledge is limited to all we now know and understand, while imagination embraces the entire world, and all there ever will be to know and understand.”"
+        },
+        {
+            "q": "Democracy is the art and science of running the circus from the monkey cage",
+            "options": [
+                "Tom Baker",
+                "H. L. Mencken"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "q": "Since i was an atheist for many years and came to believe in god through my studies in science",
+            "options": [
+                "John Clayton"
+            ]
+        },
+        {
+            "q": "The science of life is changing hearts and minds",
+            "options": [
+                "Gary Bauer"
+            ]
+        },
+        {
+            "q": "The most exciting phrase to hear in science",
+            "options": [
+                "Isaac Asimov"
+            ]
+        },
+        {
+            "q": "I told my father i had to try political science for a year",
+            "options": [
+                "Paul Wolfowitz"
+            ]
+        },
+        {
+            "q": "Mathematical science is in my opinion an indivisible whole",
+            "options": [
+                "David Hilbert"
+            ]
+        },
+        {
+            "q": "The old testament is my favourite science fantasy reading",
+            "options": [
+                "Tom Baker"
+            ]
+        },
+        {
+            "q": "Science doesn’t in the slightest depend on trust",
+            "options": [
+                "Walter Gilbert"
+            ]
+        },
+        {
+            "q": "Architecture is a science arising out of many other sciences",
+            "options": [
+                "Marcus V. Pollio"
+            ]
+        },
+        {
+            "q": "I have seen firsthand that agricultural science has enormous potential to increase the yields of small farmers and lift them out of hunger and poverty",
+            "options": [
+                "Bill Gates"
+            ]
+        }
+    ]
+}
