@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public string[] authors;
     public List<Level> levels;
     public int selectedLevelIndex = -1;
-    public int selectedLevelProgress;
+    public int selectedLevelProgress = 0;
     public string selectedLevelName {
         get {
             return levels[selectedLevelIndex].levelName;

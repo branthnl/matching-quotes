@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,36 +11,35 @@ public class LevelManager : MonoBehaviour
     public Question question;
     private Level selectedLevel;
     [SerializeField]
-    private TextMeshProUGUI levelText, progressText, quoteText, encouragementText, backgroundText;
+    private TextMeshProUGUI levelText, progressText, quoteText, backgroundText, encouragementText, answerButtonText;
     [SerializeField]
-    private Animator pausePanelAnimator, encouragementTextAnimator;
+    private Animator pausePanelAnimator, backgroundTextAnimator, encouragementTextAnimator, optionPanelAnimator, bottomPanelAnimator, nextButtonAnimator;
     [SerializeField]
-    private Transform optionPanel;
+    private Transform optionPanel, chancePanel, answerButtonTransform, answerButtonResultTransform;
+    private bool moveAnswerButtonToResultPosition;
     [SerializeField]
     private GameObject optionButtonPrefab;
     private List<Button> optionButtons;
-    public static LevelManager instance;
     private void Awake()
     {
-        if (instance == null)
-        {
-            Setup();
-            instance = this;
-            DontDestroyOnLoad(this);
-        }
-        else
-        {
-            Destroy(this);
-        }
+        Setup();
     }
     private void Setup()
     {
+        isPause = false;
         isAnswered = false;
+        moveAnswerButtonToResultPosition = false;
         selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
         levelText.text = GameManager.instance.selectedLevelName;
-        progressText.text = string.Format("Quote {0}/{1}", GameManager.instance.selectedLevelProgress, selectedLevel.questions.Length);
+        progressText.text = string.Format("Quote {0}/{1}", GameManager.instance.selectedLevelProgress + 1, selectedLevel.questions.Length);
         question = selectedLevel.questions[GameManager.instance.selectedLevelProgress];
-        quoteText.text = question.q;
+        quoteText.text = "\"" + question.q + "\"";
+        backgroundText.text = question.backgroundStory;
+        if (backgroundText.text == selectedLevel.defaultBackgroundStory)
+        {
+            backgroundText.fontStyle = FontStyles.Italic;
+            backgroundText.alignment = TextAlignmentOptions.Center;
+        }
         optionButtons = new List<Button>();
         for (int i = 0; i < question.options.Length; ++i)
         {
@@ -65,6 +65,10 @@ public class LevelManager : MonoBehaviour
         {
             UserSelectPause();
         }
+        if (moveAnswerButtonToResultPosition)
+        {
+            answerButtonTransform.position = Vector3.Lerp(answerButtonTransform.position, answerButtonResultTransform.position, 0.2f);
+        }
     }
     public void UserAnswer(int optionIndex)
     {
@@ -72,24 +76,56 @@ public class LevelManager : MonoBehaviour
         if (optionIndex == question.correctIndex)
         {
             Debug.Log("CORRECT");
-            encouragementText.text = selectedLevel.correctResponse;
-            encouragementTextAnimator.SetTrigger("In");
             isAnswered = true;
+            for (int i = optionButtons.Count - 1; i >= 0; --i)
+            {
+                if (i != question.correctIndex)
+                {
+                    optionButtons[i].interactable = false;
+                }
+            }
+            StartCoroutine(TransitionToResult());
         }
         else
         {
             Debug.Log("INCORRECT");
+            Destroy(chancePanel.GetChild(0).gameObject);
             encouragementText.text = selectedLevel.incorrectResponse;
             encouragementTextAnimator.SetTrigger("In");
             optionButtons[optionIndex].interactable = false;
         }
     }
+    IEnumerator TransitionToResult()
+    {
+        encouragementText.text = selectedLevel.correctResponse;
+        encouragementTextAnimator.SetTrigger("In");
+        optionButtons[question.correctIndex].GetComponent<Animator>().SetTrigger("Grow Outline");
+        bottomPanelAnimator.SetTrigger("Out");
+        answerButtonText.text = question.options[question.correctIndex];
+        yield return new WaitForSeconds(1.0f);
+        answerButtonTransform.position = optionButtons[question.correctIndex].transform.position;
+        optionButtons[question.correctIndex].transform.localScale = Vector3.zero;
+        moveAnswerButtonToResultPosition = true;
+        optionPanelAnimator.SetTrigger("Out");
+        encouragementTextAnimator.SetTrigger("Transition To Result");
+        yield return new WaitForSeconds(1.0f);
+        backgroundTextAnimator.SetTrigger("In");
+        if (question.backgroundStory == selectedLevel.defaultBackgroundStory)
+        {
+            yield return new WaitForSeconds(0.2f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(1.0f);
+        }
+        nextButtonAnimator.SetTrigger("In");
+    }
     public void UserSelectNext()
     {
         GameManager.instance.selectedLevelProgress++;
+        GameManager.instance.SaveProgress();
         if (GameManager.instance.selectedLevelProgress < selectedLevel.questions.Length)
         {
-            Setup();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else
