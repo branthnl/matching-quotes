@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
@@ -6,12 +9,21 @@ public class LevelManager : MonoBehaviour
     public bool isPause, isAnswered;
     public Question question;
     private Level selectedLevel;
-    private Animator pausePanelAnimator;
+    [SerializeField]
+    private TextMeshProUGUI levelText, progressText, encouragementText;
+    [SerializeField]
+    private Animator pausePanelAnimator, encouragementTextAnimator;
+    [SerializeField]
+    private Transform optionPanel;
+    [SerializeField]
+    private GameObject optionButtonPrefab;
+    private List<Button> optionButtons;
     public static LevelManager instance;
     private void Awake()
     {
         if (instance == null)
         {
+            Setup();
             instance = this;
             DontDestroyOnLoad(this);
         }
@@ -20,51 +32,72 @@ public class LevelManager : MonoBehaviour
             Destroy(this);
         }
     }
-    private void Start() {
-        selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
-        Setup();
-    }
-    private void Setup() {
+    private void Setup()
+    {
         isAnswered = false;
+        selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
         question = selectedLevel.questions[GameManager.instance.selectedLevelProgress];
-    }
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            if (isPause) {
-                UserSelectResume();
-            }
-            else {
-                UserSelectPause();
-            }
+        optionButtons = new List<Button>();
+        for (int i = 0; i < question.options.Length; ++i)
+        {
+            optionButtons.Add(AddOptionButton(i, question.options[i]));
         }
     }
-    public void UserAnswer(int answerIndex) {
-        if (answerIndex == question.correctIndex) {
+    private Button AddOptionButton(int optionIndex, string optionText)
+    {
+        GameObject n = Instantiate(optionButtonPrefab);
+        Button btn = n.GetComponent<Button>();
+        btn.onClick.AddListener(() =>
+        {
+            UserAnswer(optionIndex);
+        });
+        n.GetComponentInChildren<TextMeshProUGUI>().text = optionText;
+        n.transform.SetParent(optionPanel);
+        n.GetComponent<RectTransform>().localScale = Vector3.one;
+        return btn;
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UserSelectPause();
+        }
+    }
+    public void UserAnswer(int optionIndex)
+    {
+        if (optionIndex == question.correctIndex)
+        {
             Debug.Log("CORRECT");
         }
-        else {
+        else
+        {
             Debug.Log("INCORRECT");
+            encouragementText.text = selectedLevel.incorrectResponse;
+            encouragementTextAnimator.SetTrigger("In");
+            optionButtons[optionIndex].interactable = false;
         }
     }
-    public void UserSelectNext() {
+    public void UserSelectNext()
+    {
         GameManager.instance.selectedLevelProgress++;
-        if (GameManager.instance.selectedLevelProgress < selectedLevel.questions.Length) {
+        if (GameManager.instance.selectedLevelProgress < selectedLevel.questions.Length)
+        {
             Setup();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
-        else {
+        else
+        {
             // Complete
         }
     }
-    public void UserSelectPause() {
-        isPause = true;
-        pausePanelAnimator.SetBool("isPause", true);
-    }
-    public void UserSelectResume() {
-        isPause = false;
-        pausePanelAnimator.SetBool("isPause", false);
-    }
-    public void UserSelectHome() {
+    public void UserSelectHome()
+    {
+        Destroy(this);
         SceneManager.LoadScene("Menu");
+    }
+    public void UserSelectPause()
+    {
+        isPause = !isPause;
+        pausePanelAnimator.SetTrigger(isPause ? "In" : "Out");
     }
 }
