@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour
     public Question question;
     private Level selectedLevel;
     [SerializeField]
-    private TextMeshProUGUI levelText, progressText, encouragementText;
+    private TextMeshProUGUI levelText, progressText, quoteText, encouragementText, backgroundText;
     [SerializeField]
     private Animator pausePanelAnimator, encouragementTextAnimator;
     [SerializeField]
@@ -36,7 +36,10 @@ public class LevelManager : MonoBehaviour
     {
         isAnswered = false;
         selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
+        levelText.text = GameManager.instance.selectedLevelName;
+        progressText.text = string.Format("Quote {0}/{1}", GameManager.instance.selectedLevelProgress, selectedLevel.questions.Length);
         question = selectedLevel.questions[GameManager.instance.selectedLevelProgress];
+        quoteText.text = question.q;
         optionButtons = new List<Button>();
         for (int i = 0; i < question.options.Length; ++i)
         {
@@ -65,9 +68,13 @@ public class LevelManager : MonoBehaviour
     }
     public void UserAnswer(int optionIndex)
     {
+        if (isAnswered) return;
         if (optionIndex == question.correctIndex)
         {
             Debug.Log("CORRECT");
+            encouragementText.text = selectedLevel.correctResponse;
+            encouragementTextAnimator.SetTrigger("In");
+            isAnswered = true;
         }
         else
         {

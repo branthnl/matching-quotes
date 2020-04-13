@@ -1858,6 +1858,9 @@ MonoBehaviour:
     options: []
     correctIndex: 0
     backgroundStory: 
+  levelText: {fileID: 2043661209}
+  progressText: {fileID: 935542874}
+  quoteText: {fileID: 55511871}
   encouragementText: {fileID: 204199502}
   pausePanelAnimator: {fileID: 1946513416}
   encouragementTextAnimator: {fileID: 204199504}
