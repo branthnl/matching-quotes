@@ -2713,7 +2713,6 @@ MonoBehaviour:
   chancePanel: {fileID: 341636811}
   answerButtonTransform: {fileID: 942419217}
   answerButtonResultTransform: {fileID: 1848484661}
-  moveAnswerButtonToResultPosition: 0
   optionButtonPrefab: {fileID: 7946875339555118733, guid: 6d72219015c570e43aca5de9a83986a2,
     type: 3}
 --- !u!4 &1304333138
@@ -3184,11 +3183,11 @@ RectTransform:
   m_Father: {fileID: 707998146}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1100}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -820}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1946513412
 GameObject:
   m_ObjectHideFlags: 0

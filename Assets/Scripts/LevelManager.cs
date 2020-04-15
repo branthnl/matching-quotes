@@ -22,16 +22,22 @@ public class LevelManager : MonoBehaviour
     private List<Button> optionButtons;
     private void Awake()
     {
-        Setup();
-    }
-    private void Setup()
-    {
         isPause = false;
         isAnswered = false;
         moveAnswerButtonToResultPosition = false;
-        selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
+        if (GameManager.instance.isEndless) {
+            selectedLevel = GameManager.instance.endlessLevel;
+            // progressText.text = string.Format("Quote {0}", GameManager.instance.selectedLevelProgress + 1);
+        }
+        else {
+            selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
+            progressText.text = string.Format("Quote {0}/{1}", GameManager.instance.selectedLevelProgress + 1, selectedLevel.questions.Length);
+        }
         levelText.text = GameManager.instance.selectedLevelName;
-        progressText.text = string.Format("Quote {0}/{1}", GameManager.instance.selectedLevelProgress + 1, selectedLevel.questions.Length);
+        SetQuestion();
+    }
+    private void SetQuestion()
+    {
         question = selectedLevel.questions[GameManager.instance.selectedLevelProgress];
         quoteText.text = "\"" + question.q + "\"";
         backgroundText.text = question.backgroundStory;
@@ -112,11 +118,11 @@ public class LevelManager : MonoBehaviour
         backgroundTextAnimator.SetTrigger("In");
         if (question.backgroundStory == selectedLevel.defaultBackgroundStory)
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.1f);
         }
         else
         {
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.5f);
         }
         nextButtonAnimator.SetTrigger("In");
     }
@@ -130,7 +136,12 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            // Complete
+            if (GameManager.instance.isEndless) {
+                GameManager.instance.selectedLevelProgress = 0;
+            }
+            else {
+                // Complete
+            }
         }
     }
     public void UserSelectHome()

@@ -11,12 +11,13 @@ public class GameManager : MonoBehaviour
     private TextAsset[] levelsData;
     public string[] authors;
     public List<Level> levels;
+    public Level endlessLevel;
     public bool isEndless = false;
     public int selectedLevelIndex = -1;
     public int selectedLevelProgress = 0;
     public string selectedLevelName {
         get {
-            return levels[selectedLevelIndex].levelName;
+            return isEndless? endlessLevel.levelName : levels[selectedLevelIndex].levelName;
         }
     }
     public static GameManager instance;
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
     private void LoadData()
     {
         authors = authorsData.text.Trim().Split('\n');
+        List<Question> totalQuestions = new List<Question>();
         for (int i = levelsData.Length - 1; i >= 0; --i)
         {
             Level level = JsonUtility.FromJson<Level>(levelsData[i].text);
@@ -51,33 +53,46 @@ public class GameManager : MonoBehaviour
                 {
                     question.backgroundStory = level.defaultBackgroundStory;
                 }
-                string correctQuestion = question.options[question.correctIndex];
+                string correctOption = question.options[question.correctIndex];
                 if (question.options.Length < level.defaultOptionAmount)
                 {
                     List<string> tempAuthors = authors.ToList<string>();
                     string[] temp = new string[level.defaultOptionAmount];
                     for (int k = 0; k < level.defaultOptionAmount; k++)
                     {
+                        // If we have k'th options defined
                         if (question.options.Length > k)
                         {
+                            // Copy it
                             temp[k] = question.options[k];
                         }
                         else
                         {
-                            do
+                            // Otherwise get a random author to pass
+                            // Make sure the random author is not similar to the correct author
+                            while (tempAuthors.Count > 0)
                             {
                                 int randomIndex = Random.Range(0, tempAuthors.Count);
                                 temp[k] = tempAuthors[randomIndex];
                                 tempAuthors.RemoveAt(randomIndex);
+                                if (temp[k] != correctOption) {
+                                    break;
+                                }
                             }
-                            while (temp[k].Equals(correctQuestion) && tempAuthors.Count > 0);
                         }
                     }
                     question.options = temp;
                 }
+                totalQuestions.Add(question);
             }
             levels.Add(level);
         }
+        // Combine all available question to make endless level
+        endlessLevel = new Level("Endless",
+                                 "Great Job! Let's try the next one",
+                                 "Nice try, but missed. Let's try again",
+                                 3, true, "Under research",
+                                 totalQuestions.ToArray());
     }
     public void SaveProgress() {
         PlayerPrefs.SetInt(selectedLevelName, selectedLevelProgress);
