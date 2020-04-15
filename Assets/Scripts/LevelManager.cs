@@ -19,6 +19,8 @@ public class LevelManager : MonoBehaviour
     private bool moveAnswerButtonToResultPosition;
     [SerializeField]
     private GameObject optionButtonPrefab;
+    [SerializeField]
+    private Button hintButton;
     private List<Button> optionButtons;
     private void Awake()
     {
@@ -27,7 +29,7 @@ public class LevelManager : MonoBehaviour
         moveAnswerButtonToResultPosition = false;
         if (GameManager.instance.isEndless) {
             selectedLevel = GameManager.instance.endlessLevel;
-            // progressText.text = string.Format("Quote {0}", GameManager.instance.selectedLevelProgress + 1);
+            progressText.text = "∞";//string.Format("Quote {0}", GameManager.instance.selectedLevelProgress + 1);
         }
         else {
             selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
@@ -125,6 +127,19 @@ public class LevelManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
         nextButtonAnimator.SetTrigger("In");
+    }
+    public void UserSelectHint() {
+        if (hintButton.interactable) {
+            for (int i = optionButtons.Count - 1; i >= 0; --i)
+            {
+                if (i != question.correctIndex && optionButtons[i].interactable)
+                {
+                    optionButtons[i].interactable = false;
+                    break;
+                }
+            }
+            hintButton.interactable = false;
+        }
     }
     public void UserSelectNext()
     {

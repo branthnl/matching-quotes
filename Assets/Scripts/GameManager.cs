@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
                 if (question.options.Length < level.defaultOptionAmount)
                 {
                     List<string> tempAuthors = authors.ToList<string>();
+                    tempAuthors.Remove(correctOption);
                     string[] temp = new string[level.defaultOptionAmount];
                     for (int k = 0; k < level.defaultOptionAmount; k++)
                     {
@@ -68,17 +69,11 @@ public class GameManager : MonoBehaviour
                         }
                         else
                         {
+                            int randomIndex = Random.Range(0, tempAuthors.Count);
                             // Otherwise get a random author to pass
-                            // Make sure the random author is not similar to the correct author
-                            while (tempAuthors.Count > 0)
-                            {
-                                int randomIndex = Random.Range(0, tempAuthors.Count);
-                                temp[k] = tempAuthors[randomIndex];
-                                tempAuthors.RemoveAt(randomIndex);
-                                if (temp[k] != correctOption) {
-                                    break;
-                                }
-                            }
+                            temp[k] = tempAuthors[randomIndex];
+                            // Make sure no similar author in the options
+                            tempAuthors.RemoveAt(randomIndex);
                         }
                     }
                     question.options = temp;
@@ -87,7 +82,9 @@ public class GameManager : MonoBehaviour
             }
             levels.Add(level);
         }
-        // Combine all available question to make endless level
+        // Shuffle all available question to make endless level
+        var rnd = new System.Random();
+        totalQuestions.OrderBy(a => rnd.Next());
         endlessLevel = new Level("Endless",
                                  "Great Job! Let's try the next one",
                                  "Nice try, but missed. Let's try again",
