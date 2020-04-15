@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     {
         authors = authorsData.text.Trim().Split('\n');
         List<Question> totalQuestions = new List<Question>();
-        for (int i = levelsData.Length - 1; i >= 0; --i)
+        for (int i = 0; i < levelsData.Length; ++i)
         {
             Level level = JsonUtility.FromJson<Level>(levelsData[i].text);
             for (int j = level.questions.Length - 1; j >= 0; --j)
@@ -59,7 +59,6 @@ public class GameManager : MonoBehaviour
                 if (question.options.Length < level.defaultOptionAmount)
                 {
                     List<string> tempAuthors = authors.ToList<string>();
-                    tempAuthors.Remove(correctOption);
                     string[] temp = new string[level.defaultOptionAmount];
                     for (int k = 0; k < level.defaultOptionAmount; k++)
                     {
@@ -71,11 +70,16 @@ public class GameManager : MonoBehaviour
                         }
                         else
                         {
-                            int randomIndex = Random.Range(0, tempAuthors.Count);
-                            // Otherwise get a random author to pass
-                            temp[k] = tempAuthors[randomIndex];
-                            // Make sure no similar author in the options
-                            tempAuthors.RemoveAt(randomIndex);
+                            do
+                            {
+                                // Otherwise get a random author to pass
+                                int randomIndex = Random.Range(0, tempAuthors.Count);
+                                string randomAuthor = tempAuthors[randomIndex];
+                                temp[k] = randomAuthor;
+                                // Make sure no similar author in the options
+                                tempAuthors.RemoveAt(randomIndex);
+                            }
+                            while (temp[k].Trim().ToLower().Equals(correctOption.Trim().ToLower()) && tempAuthors.Count > 0);
                         }
                     }
                     question.options = temp;

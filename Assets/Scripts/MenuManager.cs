@@ -1,5 +1,5 @@
 ﻿using TMPro;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -24,9 +24,8 @@ public class MenuManager : MonoBehaviour
     private void Awake()
     {
         var levels = GameManager.instance.levels;
-        int levelCount = levels.Count;
         levelButtonsText = new Dictionary<int, TextMeshProUGUI>();
-        for (int i = 0; i < levelCount; ++i)
+        for (int i = levels.Count - 1; i >= 0; --i)
         {
             int levelProgress = PlayerPrefs.GetInt(levels[i].levelName, 0);
             AddLevelButton(i, levels[i].levelName, levelProgress, levels[i].questions.Length);
@@ -36,21 +35,37 @@ public class MenuManager : MonoBehaviour
     {
         GameObject n = Instantiate(levelButtonPrefab);
         TextMeshProUGUI buttonText = n.GetComponentInChildren<TextMeshProUGUI>();
-        buttonText.text = string.Format("{0} {1}/{2}", levelName, levelProgress, questionAmount);
-        levelButtonsText.Add(levelIndex, buttonText);
+
         n.GetComponent<Button>().onClick.AddListener(() =>
         {
             UserSelectLevel(levelIndex);
         });
-        Button resetButton = n.GetComponentInChildren<Button>();
-        resetButton.gameObject.SetActive(levelProgress > 0);
+
+        if (levelProgress >= questionAmount)
+        {
+            buttonText.text = string.Format("{0} 100%", levelName);
+        }
+        else
+        {
+            buttonText.text = string.Format("{0} {1}/{2}", levelName, levelProgress, questionAmount);
+        }
+
+        levelButtonsText.Add(levelIndex, buttonText);
+
+        Button resetButton = n.transform.GetChild(1).GetComponent<Button>();
+        if (levelProgress > 0)
+        {
+            resetButton.gameObject.SetActive(true);
+        }
         resetButton.onClick.AddListener(() =>
         {
+            Debug.Log("REstting " + levelName);
             GameManager.instance.ResetProgress(levelName);
             levelButtonsText[levelIndex].text = string.Format("{0} {1}/{2}", levelName, 0, questionAmount);
         });
         n.transform.SetParent(levelParent);
         n.transform.localScale = Vector3.one;
+        n.transform.SetAsFirstSibling();
     }
     private void Start()
     {
