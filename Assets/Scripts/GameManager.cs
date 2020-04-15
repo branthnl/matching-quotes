@@ -27,8 +27,6 @@ public class GameManager : MonoBehaviour
     {
         if (instance == null)
         {
-            ResetProgress("Science");
-            ResetProgress("Sports");
             LoadData();
             instance = this;
             DontDestroyOnLoad(this);

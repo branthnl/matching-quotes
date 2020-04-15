@@ -67,7 +67,6 @@ public class LevelManager : MonoBehaviour
                 optionIndexes[i] = optionIndexes[randomIndex];
                 optionIndexes[randomIndex] = tempValue;
             }
-            Debug.Log("SHUFFLING...");
         }
         foreach (int i in optionIndexes)
         {
@@ -103,7 +102,7 @@ public class LevelManager : MonoBehaviour
         if (isAnswered) return;
         if (optionIndex == question.correctIndex)
         {
-            Debug.Log("CORRECT");
+            // Debug.Log("CORRECT");
             isAnswered = true;
             for (int i = optionButtons.Count - 1; i >= 0; --i)
             {
@@ -116,7 +115,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("INCORRECT");
+            // Debug.Log("INCORRECT");
             Destroy(chancePanel.GetChild(0).gameObject);
             encouragementText.text = selectedLevel.incorrectResponse;
             encouragementTextAnimator.SetTrigger("In");

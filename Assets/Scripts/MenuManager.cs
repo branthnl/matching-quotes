@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public enum MenuState
@@ -12,12 +15,47 @@ public class MenuManager : MonoBehaviour
     public MenuState state;
     [SerializeField]
     private Animator menuPanelAnimator;
+    [SerializeField]
+    private Transform levelParent;
+    [SerializeField]
+    private GameObject levelButtonPrefab;
     private bool isTransitioning = true;
+    private Dictionary<int, TextMeshProUGUI> levelButtonsText;
+    private void Awake()
+    {
+        var levels = GameManager.instance.levels;
+        int levelCount = levels.Count;
+        levelButtonsText = new Dictionary<int, TextMeshProUGUI>();
+        for (int i = 0; i < levelCount; ++i)
+        {
+            int levelProgress = PlayerPrefs.GetInt(levels[i].levelName, 0);
+            AddLevelButton(i, levels[i].levelName, levelProgress, levels[i].questions.Length);
+        }
+    }
+    private void AddLevelButton(int levelIndex, string levelName, int levelProgress, int questionAmount)
+    {
+        GameObject n = Instantiate(levelButtonPrefab);
+        TextMeshProUGUI buttonText = n.GetComponentInChildren<TextMeshProUGUI>();
+        buttonText.text = string.Format("{0} {1}/{2}", levelName, levelProgress, questionAmount);
+        levelButtonsText.Add(levelIndex, buttonText);
+        n.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            UserSelectLevel(levelIndex);
+        });
+        Button resetButton = n.GetComponentInChildren<Button>();
+        resetButton.gameObject.SetActive(levelProgress > 0);
+        resetButton.onClick.AddListener(() =>
+        {
+            GameManager.instance.ResetProgress(levelName);
+            levelButtonsText[levelIndex].text = string.Format("{0} {1}/{2}", levelName, 0, questionAmount);
+        });
+        n.transform.SetParent(levelParent);
+        n.transform.localScale = Vector3.one;
+    }
     private void Start()
     {
-        // Load level progress
         state = MenuState.MainMenu;
-        Invoke("doneTransitioning", 0.4f);
+        Invoke("doneTransitioning", 0.2f);
     }
     private void doneTransitioning()
     {
