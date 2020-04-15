@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private TextAsset[] levelsData;
     public string[] authors;
     public List<Level> levels;
+    public bool isEndless = false;
     public int selectedLevelIndex = -1;
     public int selectedLevelProgress = 0;
     public string selectedLevelName {

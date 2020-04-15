@@ -52,11 +52,14 @@ public class MenuManager : MonoBehaviour
     {
         if (levelIndex >= 0 && levelIndex < GameManager.instance.levels.Count)
         {
+            GameManager.instance.isEndless = false;
             GameManager.instance.selectedLevelIndex = levelIndex;
+            GameManager.instance.LoadProgress();
             SceneManager.LoadScene("Level");
         }
     }
     public void UserSelectEndless() {
+        GameManager.instance.isEndless = true;
         SceneManager.LoadScene("Level");
     }
     public void UserSelectBackToMainMenu()
