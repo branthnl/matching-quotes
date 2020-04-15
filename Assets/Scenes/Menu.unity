@@ -1053,7 +1053,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.79607844, g: 0.07058824, b: 0.07058824, a: 0.05490196}
+      maxColor: {r: 0.9882353, g: 0.9490196, b: 0.9490196, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -6718,8 +6718,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Matching Quotes
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 79c88744add44ad489339467e11d67db, type: 2}
-  m_sharedMaterial: {fileID: -6937615822078025536, guid: 79c88744add44ad489339467e11d67db,
+  m_fontAsset: {fileID: 11400000, guid: c7bd964b433f8c24b8a31519e1655f74, type: 2}
+  m_sharedMaterial: {fileID: -6937615822078025536, guid: c7bd964b433f8c24b8a31519e1655f74,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

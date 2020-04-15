@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,17 +22,19 @@ public class LevelManager : MonoBehaviour
     private GameObject completePanel, optionButtonPrefab;
     [SerializeField]
     private Button hintButton;
-    private List<Button> optionButtons;
+    private Dictionary<int, Button> optionButtons;
     private void Awake()
     {
         isPause = false;
         isAnswered = false;
         moveAnswerButtonToResultPosition = false;
-        if (GameManager.instance.isEndless) {
+        if (GameManager.instance.isEndless)
+        {
             selectedLevel = GameManager.instance.endlessLevel;
             progressText.text = string.Format("Quote {0}", GameManager.instance.selectedLevelProgress + 1);
         }
-        else {
+        else
+        {
             selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
             progressText.text = string.Format("Quote {0}/{1}", GameManager.instance.selectedLevelProgress + 1, selectedLevel.questions.Length);
         }
@@ -48,14 +51,27 @@ public class LevelManager : MonoBehaviour
             backgroundText.fontStyle = FontStyles.Italic;
             backgroundText.alignment = TextAlignmentOptions.Center;
         }
-        optionButtons = new List<Button>();
+        optionButtons = new Dictionary<int, Button>();
         List<int> optionIndexes = new List<int>();
-        for (int i = 0; i < question.options.Length; ++i) {
+        for (int i = 0; i < question.options.Length; ++i)
+        {
             optionIndexes.Add(i);
+        }
+        if (selectedLevel.shuffleOptionPosition)
+        {
+            int optionIndexesLength = optionIndexes.Count;
+            for (int i = 0; i < optionIndexesLength; ++i)
+            {
+                var tempValue = optionIndexes[i];
+                int randomIndex = Random.Range(0, optionIndexesLength);
+                optionIndexes[i] = optionIndexes[randomIndex];
+                optionIndexes[randomIndex] = tempValue;
+            }
+            Debug.Log("SHUFFLING...");
         }
         foreach (int i in optionIndexes)
         {
-            optionButtons.Add(AddOptionButton(i, question.options[i]));
+            optionButtons.Add(i, AddOptionButton(i, question.options[i]));
         }
     }
     private Button AddOptionButton(int optionIndex, string optionText)
@@ -130,8 +146,10 @@ public class LevelManager : MonoBehaviour
         }
         nextButtonAnimator.SetTrigger("In");
     }
-    public void UserSelectHint() {
-        if (hintButton.interactable) {
+    public void UserSelectHint()
+    {
+        if (hintButton.interactable)
+        {
             for (int i = optionButtons.Count - 1; i >= 0; --i)
             {
                 if (i != question.correctIndex && optionButtons[i].interactable)
@@ -153,10 +171,12 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            if (GameManager.instance.isEndless) {
+            if (GameManager.instance.isEndless)
+            {
                 GameManager.instance.selectedLevelProgress = 0;
             }
-            else {
+            else
+            {
                 // Complete
                 finalQuoteAuthorText.text = "— " + GameManager.instance.selectedLevelName;
                 completePanel.SetActive(true);

@@ -19,7 +19,8 @@ public class MenuManager : MonoBehaviour
         state = MenuState.MainMenu;
         Invoke("doneTransitioning", 0.4f);
     }
-    private void doneTransitioning() {
+    private void doneTransitioning()
+    {
         isTransitioning = false;
     }
     private void Update()
@@ -64,7 +65,8 @@ public class MenuManager : MonoBehaviour
             SceneManager.LoadScene("Level");
         }
     }
-    public void UserSelectEndless() {
+    public void UserSelectEndless()
+    {
         GameManager.instance.isEndless = true;
         SceneManager.LoadScene("Level");
     }

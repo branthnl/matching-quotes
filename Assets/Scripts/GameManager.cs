@@ -15,9 +15,11 @@ public class GameManager : MonoBehaviour
     public bool isEndless = false;
     public int selectedLevelIndex = -1;
     public int selectedLevelProgress = 0;
-    public string selectedLevelName {
-        get {
-            return isEndless? endlessLevel.levelName : levels[selectedLevelIndex].levelName;
+    public string selectedLevelName
+    {
+        get
+        {
+            return isEndless ? endlessLevel.levelName : levels[selectedLevelIndex].levelName;
         }
     }
     public static GameManager instance;
@@ -85,21 +87,30 @@ public class GameManager : MonoBehaviour
             levels.Add(level);
         }
         // Shuffle all available question to make endless level
-        var rnd = new System.Random();
-        totalQuestions.OrderBy(a => rnd.Next());
+        int totalQuestionsLength = totalQuestions.Count;
+        for (int i = 0; i < totalQuestionsLength; ++i)
+        {
+            var tempValue = totalQuestions[i];
+            int randomIndex = Random.Range(0, totalQuestionsLength);
+            totalQuestions[i] = totalQuestions[randomIndex];
+            totalQuestions[randomIndex] = tempValue;
+        }
         endlessLevel = new Level("Endless",
                                  "Great Job! Let's try the next one",
                                  "Nice try, but missed. Let's try again",
                                  3, true, "Under research",
                                  totalQuestions.ToArray());
     }
-    public void SaveProgress() {
+    public void SaveProgress()
+    {
         PlayerPrefs.SetInt(selectedLevelName, selectedLevelProgress);
     }
-    public void LoadProgress() {
+    public void LoadProgress()
+    {
         selectedLevelProgress = PlayerPrefs.GetInt(selectedLevelName, 0);
     }
-    public void ResetProgress(string levelName) {
+    public void ResetProgress(string levelName)
+    {
         PlayerPrefs.SetInt(levelName, 0);
     }
 }
