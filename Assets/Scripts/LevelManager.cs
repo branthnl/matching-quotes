@@ -29,7 +29,7 @@ public class LevelManager : MonoBehaviour
         moveAnswerButtonToResultPosition = false;
         if (GameManager.instance.isEndless) {
             selectedLevel = GameManager.instance.endlessLevel;
-            progressText.text = "∞";//string.Format("Quote {0}", GameManager.instance.selectedLevelProgress + 1);
+            progressText.text = string.Format("Quote {0}", GameManager.instance.selectedLevelProgress + 1);
         }
         else {
             selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
