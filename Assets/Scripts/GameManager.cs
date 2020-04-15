@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     {
         if (instance == null)
         {
+            ResetProgress("Science");
+            ResetProgress("Sports");
             LoadData();
             instance = this;
             DontDestroyOnLoad(this);
@@ -96,5 +98,8 @@ public class GameManager : MonoBehaviour
     }
     public void LoadProgress() {
         selectedLevelProgress = PlayerPrefs.GetInt(selectedLevelName, 0);
+    }
+    public void ResetProgress(string levelName) {
+        PlayerPrefs.SetInt(levelName, 0);
     }
 }

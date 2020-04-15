@@ -11,14 +11,14 @@ public class LevelManager : MonoBehaviour
     public Question question;
     private Level selectedLevel;
     [SerializeField]
-    private TextMeshProUGUI levelText, progressText, quoteText, backgroundText, encouragementText, answerButtonText;
+    private TextMeshProUGUI levelText, progressText, quoteText, backgroundText, encouragementText, answerButtonText, finalQuoteAuthorText;
     [SerializeField]
     private Animator pausePanelAnimator, backgroundTextAnimator, encouragementTextAnimator, optionPanelAnimator, bottomPanelAnimator, nextButtonAnimator;
     [SerializeField]
     private Transform optionPanel, chancePanel, answerButtonTransform, answerButtonResultTransform;
     private bool moveAnswerButtonToResultPosition;
     [SerializeField]
-    private GameObject optionButtonPrefab;
+    private GameObject completePanel, optionButtonPrefab;
     [SerializeField]
     private Button hintButton;
     private List<Button> optionButtons;
@@ -49,7 +49,11 @@ public class LevelManager : MonoBehaviour
             backgroundText.alignment = TextAlignmentOptions.Center;
         }
         optionButtons = new List<Button>();
-        for (int i = 0; i < question.options.Length; ++i)
+        List<int> optionIndexes = new List<int>();
+        for (int i = 0; i < question.options.Length; ++i) {
+            optionIndexes.Add(i);
+        }
+        foreach (int i in optionIndexes)
         {
             optionButtons.Add(AddOptionButton(i, question.options[i]));
         }
@@ -118,13 +122,11 @@ public class LevelManager : MonoBehaviour
         encouragementTextAnimator.SetTrigger("Transition To Result");
         yield return new WaitForSeconds(1.0f);
         backgroundTextAnimator.SetTrigger("In");
-        if (question.backgroundStory == selectedLevel.defaultBackgroundStory)
+        // If background story exists
+        if (question.backgroundStory != selectedLevel.defaultBackgroundStory)
         {
-            yield return new WaitForSeconds(0.1f);
-        }
-        else
-        {
-            yield return new WaitForSeconds(0.5f);
+            // Give a moment
+            yield return new WaitForSeconds(0.2f);
         }
         nextButtonAnimator.SetTrigger("In");
     }
@@ -156,6 +158,8 @@ public class LevelManager : MonoBehaviour
             }
             else {
                 // Complete
+                finalQuoteAuthorText.text = "— " + GameManager.instance.selectedLevelName;
+                completePanel.SetActive(true);
             }
         }
     }

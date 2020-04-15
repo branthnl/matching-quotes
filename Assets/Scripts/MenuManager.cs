@@ -12,13 +12,19 @@ public class MenuManager : MonoBehaviour
     public MenuState state;
     [SerializeField]
     private Animator menuPanelAnimator;
+    private bool isTransitioning = true;
     private void Start()
     {
         // Load level progress
         state = MenuState.MainMenu;
+        Invoke("doneTransitioning", 0.4f);
+    }
+    private void doneTransitioning() {
+        isTransitioning = false;
     }
     private void Update()
     {
+        if (isTransitioning) return;
         if (state == MenuState.MainMenu && Input.GetMouseButtonDown(0))
         {
             ChangeState(MenuState.LevelSelection);
