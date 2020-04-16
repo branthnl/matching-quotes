@@ -683,7 +683,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You have just completed this level.
+  m_text: Red desc
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 79c88744add44ad489339467e11d67db, type: 2}
   m_sharedMaterial: {fileID: -6937615822078025536, guid: 79c88744add44ad489339467e11d67db,
@@ -3322,6 +3322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799686ac16b9c2d488df490be551a148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chance: 0
   isPause: 0
   isAnswered: 0
   question:
@@ -3329,13 +3330,16 @@ MonoBehaviour:
     options: []
     correctIndex: 0
     backgroundStory: 
+  optionGridLayout: {fileID: 329643416}
   levelText: {fileID: 2043661209}
   progressText: {fileID: 935542874}
   quoteText: {fileID: 55511871}
   backgroundText: {fileID: 883458263}
   encouragementText: {fileID: 204199502}
   answerButtonText: {fileID: 745409132}
-  finalQuoteAuthorText: {fileID: 2084276131}
+  completionResponseText: {fileID: 1475321796}
+  completionQuoteText: {fileID: 1734210077}
+  completionQuoteAuthorText: {fileID: 2084276131}
   pausePanelAnimator: {fileID: 1946513416}
   backgroundTextAnimator: {fileID: 883458264}
   encouragementTextAnimator: {fileID: 204199504}
@@ -3818,7 +3822,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
+    rgba: 0
   m_fontColor: {r: 0, g: 0, b: 0, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -4117,7 +4121,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
+    rgba: 3289650
   m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -4561,7 +4565,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
+    rgba: 3289650
   m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3

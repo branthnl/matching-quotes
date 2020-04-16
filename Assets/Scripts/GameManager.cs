@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [System.Serializable]
-public struct MyAudioClip {
+public struct MyAudioClip
+{
     public string key;
     public AudioClip clip;
 }
@@ -50,26 +51,36 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
     }
-    private void Start() {
+    private void Start()
+    {
         audioClipsDict = new Dictionary<string, AudioClip>();
-        for (int i = 0; i < audioClips.Length; ++i) {
+        for (int i = 0; i < audioClips.Length; ++i)
+        {
             audioClipsDict.Add(audioClips[i].key, audioClips[i].clip);
         }
         myAudioSources = GetComponents<AudioSource>();
-        soundMute = PlayerPrefs.GetInt("Mute", 0) == 0;
+        soundMute = false;
+        if (PlayerPrefs.HasKey("Mute"))
+        {
+            soundMute = PlayerPrefs.GetInt("Mute", 0) == 0;
+        }
         // Because we want to use UserTriggerSoundSetting()
         soundMute = !soundMute;
         UserTriggerSoundSetting();
     }
-    public void UserTriggerSoundSetting() {
+    public void UserTriggerSoundSetting()
+    {
         soundMute = !soundMute;
-        foreach (AudioSource a in myAudioSources) {
+        foreach (AudioSource a in myAudioSources)
+        {
             a.mute = soundMute;
         }
-        PlayerPrefs.SetInt("Mute", soundMute? 0 : 1);
+        PlayerPrefs.SetInt("Mute", soundMute ? 0 : 1);
     }
-    public void PlaySound(string audioClipKey) {
-        if (audioClipsDict.ContainsKey(audioClipKey)) {
+    public void PlaySound(string audioClipKey)
+    {
+        if (audioClipsDict.ContainsKey(audioClipKey))
+        {
             seAudioSource.PlayOneShot(audioClipsDict[audioClipKey]);
         }
     }
@@ -136,6 +147,10 @@ public class GameManager : MonoBehaviour
         endlessLevel = new Level("Endless",
                                  "Great Job! Let's try the next one",
                                  "Nice try, but missed. Let's try again",
+                                 "Congratulations!",
+                                 "You have just completed this level.",
+                                 "Good game.",
+                                 "You are out of chance.",
                                  3, true, "Under research",
                                  totalQuestions.ToArray());
     }

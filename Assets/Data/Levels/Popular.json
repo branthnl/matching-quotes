@@ -1,0 +1,27 @@
+{
+    "levelName": "Popular",
+    "correctResponse": "Great Job!",
+    "incorrectResponse": "Nice try, but missed. Let's try again",
+    "completionResponse": "Cool!",
+    "completionQuote": "You, have just completed this level.",
+    "outOfChanceResponse": "Good game.",
+    "outOfChanceQuote": "You, are out of chance.",
+    "defaultOptionAmount": 6,
+    "shuffleOptionPosition": true,
+    "defaultBackgroundStory": "Under research",
+    "questions": [
+        {
+            "q": "Be yourself; everyone else is already taken.",
+            "options": [
+                "Oscar Wilde",
+                "Frank Zappa",
+                "Marilyn Monroe",
+                "Albert Einstein",
+                "William W. Purkey",
+                "Marcus Tullius Cicero"
+            ],
+            "correctIndex": 0,
+            "backgroundStory": "Oscar Wilde once said, “Be yourself; everyone else is already taken.” This quote is one of the most popular quotes according to goodreads."
+        }
+    ]
+}

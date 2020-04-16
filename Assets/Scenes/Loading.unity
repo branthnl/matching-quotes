@@ -238,12 +238,17 @@ MonoBehaviour:
   levelsData:
   - {fileID: 4900000, guid: c15ec1c01b2a73f458c2de0370989c2c, type: 3}
   - {fileID: 4900000, guid: aa38412312fde7b48a254f9aace6fb7f, type: 3}
+  - {fileID: 4900000, guid: 8951235d96acd0940a4bd2a2e20751e3, type: 3}
   authors: []
   levels: []
   endlessLevel:
     levelName: 
     correctResponse: 
     incorrectResponse: 
+    completionResponse: 
+    completionQuote: 
+    outOfChanceResponse: 
+    outOfChanceQuote: 
     defaultOptionAmount: 0
     shuffleOptionPosition: 0
     defaultBackgroundStory: 

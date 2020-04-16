@@ -1,0 +1,37 @@
+{
+    "levelName": "Technology",
+    "correctResponse": "Great Job! Let's try the next one",
+    "incorrectResponse": "Nice try, but missed. Let's try again",
+    "completionResponse": "Congratulations!",
+    "completionQuote": "You, have just completed this level.",
+    "outOfChanceResponse": "Good game.",
+    "outOfChanceQuote": "You, are out of chance.",
+    "defaultOptionAmount": 5,
+    "shuffleOptionPosition": true,
+    "defaultBackgroundStory": "Under research",
+    "questions": [
+        {
+            "q": "I don’t hate technology, I don’t hate hackers, because that’s just what comes with it.",
+            "options": [
+                "Fred Durst"
+            ],
+            "backgroundStory": "Fred Durst once said, “I don’t hate technology, I don’t hate hackers, because that’s just what comes with it, without those hackers we wouldn’t solve the problems we need to solve, especially security.”"
+        },
+        {
+            "q": "The telephone is a 100-year-old technology.",
+            "options": [
+                "Niklas Zennstrom",
+                "Simon Mainwaring"
+            ],
+            "correctIndex": 0,
+            "backgroundStory": "Niklas Zennstrom once said, “The telephone is a 100-year-old technology. It’s time for a change. Charging for phone calls is something you did last century.”"
+        },
+        {
+            "q": "Our approach to making games is to find the fun first and then use the technology to enhance the fun.",
+            "options": [
+                "Sid Meier"
+            ],
+            "backgroundStory": "Sid Meier once said, “Our approach to making games is to find the fun first and then use the technology to enhance the fun.”"
+        }
+    ]
+}

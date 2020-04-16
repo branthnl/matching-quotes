@@ -43,11 +43,13 @@ public class MenuManager : MonoBehaviour
         n.GetComponent<Button>().onClick.AddListener(() =>
         {
             int updatedLevelProgress = PlayerPrefs.GetInt(levelName, 0);
-            if (updatedLevelProgress >= questionAmount) {
+            if (updatedLevelProgress >= questionAmount)
+            {
                 gameManager.PlaySound("Pop2");
                 buttonAnim.SetTrigger("Squish");
             }
-            else {
+            else
+            {
                 gameManager.PlaySound("Pop1");
                 UserSelectLevel(levelIndex);
             }
@@ -74,6 +76,7 @@ public class MenuManager : MonoBehaviour
             gameManager.PlaySound("Pop2");
             gameManager.ResetProgress(levelName);
             levelButtonsText[levelIndex].text = string.Format("{0} ({1}/{2})", levelName, 0, questionAmount);
+            resetButton.gameObject.SetActive(false);
         });
         n.transform.SetParent(levelParent);
         n.transform.localScale = Vector3.one;
@@ -93,6 +96,7 @@ public class MenuManager : MonoBehaviour
         if (isTransitioning) return;
         if (state == MenuState.MainMenu && Input.GetMouseButtonDown(0))
         {
+            gameManager.PlaySound("Pop1");
             ChangeState(MenuState.LevelSelection);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -132,12 +136,16 @@ public class MenuManager : MonoBehaviour
     }
     public void UserSelectEndless()
     {
+        gameManager.PlaySound("Pop1");
         gameManager.isEndless = true;
-        gameManager.LoadProgress();
+        // gameManager.ResetProgress("Endless");
+        // gameManager.LoadProgress();
+        gameManager.selectedLevelProgress = Random.Range(0, gameManager.endlessLevel.questions.Length);
         SceneManager.LoadScene("Level");
     }
     public void UserSelectBackToMainMenu()
     {
+        gameManager.PlaySound("Pop2");
         ChangeState(MenuState.MainMenu);
     }
 }

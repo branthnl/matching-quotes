@@ -1,5 +1,4 @@
 ﻿using TMPro;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +7,16 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    public int chance;
     public bool isPause, isAnswered;
     public Question question;
     private Level selectedLevel;
     [SerializeField]
-    private TextMeshProUGUI levelText, progressText, quoteText, backgroundText, encouragementText, answerButtonText, finalQuoteAuthorText;
+    private GridLayoutGroup optionGridLayout;
+    [SerializeField]
+    private TextMeshProUGUI levelText, progressText, quoteText, backgroundText, encouragementText, answerButtonText;
+    [SerializeField]
+    private TextMeshProUGUI completionResponseText, completionQuoteText, completionQuoteAuthorText;
     [SerializeField]
     private Animator pausePanelAnimator, backgroundTextAnimator, encouragementTextAnimator, optionPanelAnimator, bottomPanelAnimator, nextButtonAnimator;
     [SerializeField]
@@ -27,6 +31,7 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         gameManager = GameManager.instance;
+        chance = 3;
         isPause = false;
         isAnswered = false;
         moveAnswerButtonToResultPosition = false;
@@ -70,6 +75,10 @@ public class LevelManager : MonoBehaviour
                 optionIndexes[randomIndex] = tempValue;
             }
         }
+        if (optionIndexes.Count > 4)
+        {
+            optionGridLayout.cellSize = new Vector2(optionGridLayout.cellSize.x, 100);
+        }
         foreach (int i in optionIndexes)
         {
             optionButtons.Add(i, AddOptionButton(i, question.options[i]));
@@ -107,6 +116,8 @@ public class LevelManager : MonoBehaviour
         {
             // Debug.Log("CORRECT");
             isAnswered = true;
+            gameManager.selectedLevelProgress++;
+            gameManager.SaveProgress();
             for (int i = optionButtons.Count - 1; i >= 0; --i)
             {
                 if (i != question.correctIndex)
@@ -120,20 +131,35 @@ public class LevelManager : MonoBehaviour
         else
         {
             // Debug.Log("INCORRECT");
-            gameManager.PlaySound("Pop1");
-            Destroy(chancePanel.GetChild(0).gameObject);
             encouragementText.text = selectedLevel.incorrectResponse;
             encouragementTextAnimator.SetTrigger("In");
             optionButtons[optionIndex].interactable = false;
             int interactableCount = 0;
-            for (int i = optionButtons.Count - 1; i >= 0; --i) {
-                if (optionButtons[i].interactable) {
+            for (int i = optionButtons.Count - 1; i >= 0; --i)
+            {
+                if (optionButtons[i].interactable)
+                {
                     ++interactableCount;
                 }
             }
-            if (interactableCount < 2) {
+            if (interactableCount < 2)
+            {
                 hintButton.interactable = false;
             }
+            --chance;
+            if (chance < 0)
+            {
+                // Out of chance
+                completionResponseText.text = selectedLevel.outOfChanceResponse;
+                completionQuoteText.text = "\"" + selectedLevel.outOfChanceQuote + "\"";
+                completionQuoteAuthorText.text = "— " + gameManager.selectedLevelName;
+                completePanel.SetActive(true);
+            }
+            else
+            {
+                Destroy(chancePanel.GetChild(0).gameObject);
+            }
+            gameManager.PlaySound("Pop1");
         }
     }
     IEnumerator TransitionToResult()
@@ -155,7 +181,7 @@ public class LevelManager : MonoBehaviour
         // If background story exists
         if (question.backgroundStory != selectedLevel.defaultBackgroundStory)
         {
-            // Give a moment
+            // Give a moment before next button appear
             yield return new WaitForSeconds(0.2f);
         }
         nextButtonAnimator.SetTrigger("In");
@@ -179,8 +205,6 @@ public class LevelManager : MonoBehaviour
     public void UserSelectNext()
     {
         gameManager.PlaySound("Pop1");
-        gameManager.selectedLevelProgress++;
-        gameManager.SaveProgress();
         if (gameManager.selectedLevelProgress < selectedLevel.questions.Length)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -194,7 +218,9 @@ public class LevelManager : MonoBehaviour
             else
             {
                 // Complete
-                finalQuoteAuthorText.text = "— " + gameManager.selectedLevelName;
+                completionResponseText.text = selectedLevel.completionResponse;
+                completionQuoteText.text = "\"" + selectedLevel.completionQuote + "\"";
+                completionQuoteAuthorText.text = "— " + gameManager.selectedLevelName;
                 completePanel.SetActive(true);
             }
         }
