@@ -8,10 +8,11 @@ public class SoundButton : MonoBehaviour
     [SerializeField]
     private Image waveImage;
     private void Awake() {
+        waveImage.enabled = !GameManager.instance.soundMute;
         button.onClick.AddListener(() => {
             GameManager.instance.UserTriggerSoundSetting();
             GameManager.instance.PlaySound("Pop1");
-            waveImage.enabled = !waveImage.enabled;
+            waveImage.enabled = !GameManager.instance.soundMute;
         });
     }
 }

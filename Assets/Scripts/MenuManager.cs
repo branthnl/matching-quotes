@@ -38,11 +38,14 @@ public class MenuManager : MonoBehaviour
         GameObject n = Instantiate(levelButtonPrefab);
         TextMeshProUGUI buttonText = n.GetComponentInChildren<TextMeshProUGUI>();
 
+        Animator buttonAnim = n.GetComponent<Animator>();
+
         n.GetComponent<Button>().onClick.AddListener(() =>
         {
             int updatedLevelProgress = PlayerPrefs.GetInt(levelName, 0);
             if (updatedLevelProgress >= questionAmount) {
                 gameManager.PlaySound("Pop2");
+                buttonAnim.SetTrigger("Squish");
             }
             else {
                 gameManager.PlaySound("Pop1");

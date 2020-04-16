@@ -236,8 +236,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   authorsData: {fileID: 4900000, guid: 84b90b972b274954383f745613398333, type: 3}
   levelsData:
-  - {fileID: 4900000, guid: aa38412312fde7b48a254f9aace6fb7f, type: 3}
   - {fileID: 4900000, guid: c15ec1c01b2a73f458c2de0370989c2c, type: 3}
+  - {fileID: 4900000, guid: aa38412312fde7b48a254f9aace6fb7f, type: 3}
   authors: []
   levels: []
   endlessLevel:
@@ -251,6 +251,7 @@ MonoBehaviour:
   isEndless: 0
   selectedLevelIndex: -1
   selectedLevelProgress: 0
+  soundMute: 0
   seAudioSource: {fileID: 1797935434}
   audioClips:
   - key: Pop1
@@ -259,6 +260,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 35b4fb47eaebdf54286ac1912e2ad319, type: 3}
   - key: Bell
     clip: {fileID: 8300000, guid: 638343b394595db4cbe60a29c7b7df1e, type: 3}
+  - key: Flip
+    clip: {fileID: 8300000, guid: a5c0e354e03d2e340a0689b8226ad8f5, type: 3}
   - key: Bell High
     clip: {fileID: 8300000, guid: fd17efdaae8363541b592885176e76e3, type: 3}
 --- !u!4 &1797935432

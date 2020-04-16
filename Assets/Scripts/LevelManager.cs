@@ -33,7 +33,7 @@ public class LevelManager : MonoBehaviour
         if (gameManager.isEndless)
         {
             selectedLevel = gameManager.endlessLevel;
-            progressText.text = string.Format("Quote {0}", gameManager.selectedLevelProgress + 1);
+            progressText.text = "∞";//string.Format("Quote {0}", gameManager.selectedLevelProgress + 1);
         }
         else
         {
@@ -150,6 +150,7 @@ public class LevelManager : MonoBehaviour
         optionPanelAnimator.SetTrigger("Out");
         encouragementTextAnimator.SetTrigger("Transition To Result");
         yield return new WaitForSeconds(1.0f);
+        gameManager.PlaySound("Flip");
         backgroundTextAnimator.SetTrigger("In");
         // If background story exists
         if (question.backgroundStory != selectedLevel.defaultBackgroundStory)
@@ -172,7 +173,7 @@ public class LevelManager : MonoBehaviour
                 }
             }
             hintButton.interactable = false;
-            gameManager.PlaySound("Bell High");
+            gameManager.PlaySound("Pop1");
         }
     }
     public void UserSelectNext()

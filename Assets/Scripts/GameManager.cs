@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
             return isEndless ? endlessLevel.levelName : levels[selectedLevelIndex].levelName;
         }
     }
+    public bool soundMute;
     [SerializeField]
     private AudioSource seAudioSource;
     [SerializeField]
@@ -55,11 +56,17 @@ public class GameManager : MonoBehaviour
             audioClipsDict.Add(audioClips[i].key, audioClips[i].clip);
         }
         myAudioSources = GetComponents<AudioSource>();
+        soundMute = PlayerPrefs.GetInt("Mute", 0) == 0;
+        // Because we want to use UserTriggerSoundSetting()
+        soundMute = !soundMute;
+        UserTriggerSoundSetting();
     }
     public void UserTriggerSoundSetting() {
+        soundMute = !soundMute;
         foreach (AudioSource a in myAudioSources) {
-            a.mute = !a.mute;
+            a.mute = soundMute;
         }
+        PlayerPrefs.SetInt("Mute", soundMute? 0 : 1);
     }
     public void PlaySound(string audioClipKey) {
         if (audioClipsDict.ContainsKey(audioClipKey)) {
