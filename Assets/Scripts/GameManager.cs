@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[System.Serializable]
+public struct MyAudioClip {
+    public string key;
+    public AudioClip clip;
+}
+
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
@@ -22,6 +28,12 @@ public class GameManager : MonoBehaviour
             return isEndless ? endlessLevel.levelName : levels[selectedLevelIndex].levelName;
         }
     }
+    [SerializeField]
+    private AudioSource seAudioSource;
+    [SerializeField]
+    private MyAudioClip[] audioClips;
+    private Dictionary<string, AudioClip> audioClipsDict;
+    private AudioSource[] myAudioSources;
     public static GameManager instance;
     private void Awake()
     {
@@ -35,6 +47,23 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(this);
+        }
+    }
+    private void Start() {
+        audioClipsDict = new Dictionary<string, AudioClip>();
+        for (int i = 0; i < audioClips.Length; ++i) {
+            audioClipsDict.Add(audioClips[i].key, audioClips[i].clip);
+        }
+        myAudioSources = GetComponents<AudioSource>();
+    }
+    public void UserTriggerSoundSetting() {
+        foreach (AudioSource a in myAudioSources) {
+            a.mute = !a.mute;
+        }
+    }
+    public void PlaySound(string audioClipKey) {
+        if (audioClipsDict.ContainsKey(audioClipKey)) {
+            seAudioSource.PlayOneShot(audioClipsDict[audioClipKey]);
         }
     }
     private void LoadData()

@@ -21,9 +21,11 @@ public class MenuManager : MonoBehaviour
     private GameObject levelButtonPrefab;
     private bool isTransitioning = true;
     private Dictionary<int, TextMeshProUGUI> levelButtonsText;
+    private GameManager gameManager;
     private void Awake()
     {
-        var levels = GameManager.instance.levels;
+        gameManager = GameManager.instance;
+        var levels = gameManager.levels;
         levelButtonsText = new Dictionary<int, TextMeshProUGUI>();
         for (int i = levels.Count - 1; i >= 0; --i)
         {
@@ -38,7 +40,14 @@ public class MenuManager : MonoBehaviour
 
         n.GetComponent<Button>().onClick.AddListener(() =>
         {
-            UserSelectLevel(levelIndex);
+            int updatedLevelProgress = PlayerPrefs.GetInt(levelName, 0);
+            if (updatedLevelProgress >= questionAmount) {
+                gameManager.PlaySound("Pop2");
+            }
+            else {
+                gameManager.PlaySound("Pop1");
+                UserSelectLevel(levelIndex);
+            }
         });
 
         if (levelProgress >= questionAmount)
@@ -47,7 +56,7 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            buttonText.text = string.Format("{0} {1}/{2}", levelName, levelProgress, questionAmount);
+            buttonText.text = string.Format("{0} ({1}/{2})", levelName, levelProgress, questionAmount);
         }
 
         levelButtonsText.Add(levelIndex, buttonText);
@@ -59,9 +68,9 @@ public class MenuManager : MonoBehaviour
         }
         resetButton.onClick.AddListener(() =>
         {
-            Debug.Log("REstting " + levelName);
-            GameManager.instance.ResetProgress(levelName);
-            levelButtonsText[levelIndex].text = string.Format("{0} {1}/{2}", levelName, 0, questionAmount);
+            gameManager.PlaySound("Pop2");
+            gameManager.ResetProgress(levelName);
+            levelButtonsText[levelIndex].text = string.Format("{0} ({1}/{2})", levelName, 0, questionAmount);
         });
         n.transform.SetParent(levelParent);
         n.transform.localScale = Vector3.one;
@@ -110,17 +119,18 @@ public class MenuManager : MonoBehaviour
     }
     public void UserSelectLevel(int levelIndex)
     {
-        if (levelIndex >= 0 && levelIndex < GameManager.instance.levels.Count)
+        if (levelIndex >= 0 && levelIndex < gameManager.levels.Count)
         {
-            GameManager.instance.isEndless = false;
-            GameManager.instance.selectedLevelIndex = levelIndex;
-            GameManager.instance.LoadProgress();
+            gameManager.isEndless = false;
+            gameManager.selectedLevelIndex = levelIndex;
+            gameManager.LoadProgress();
             SceneManager.LoadScene("Level");
         }
     }
     public void UserSelectEndless()
     {
-        GameManager.instance.isEndless = true;
+        gameManager.isEndless = true;
+        gameManager.LoadProgress();
         SceneManager.LoadScene("Level");
     }
     public void UserSelectBackToMainMenu()

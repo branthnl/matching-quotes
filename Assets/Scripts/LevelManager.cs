@@ -23,27 +23,29 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private Button hintButton;
     private Dictionary<int, Button> optionButtons;
+    private GameManager gameManager;
     private void Awake()
     {
+        gameManager = GameManager.instance;
         isPause = false;
         isAnswered = false;
         moveAnswerButtonToResultPosition = false;
-        if (GameManager.instance.isEndless)
+        if (gameManager.isEndless)
         {
-            selectedLevel = GameManager.instance.endlessLevel;
-            progressText.text = string.Format("Quote {0}", GameManager.instance.selectedLevelProgress + 1);
+            selectedLevel = gameManager.endlessLevel;
+            progressText.text = string.Format("Quote {0}", gameManager.selectedLevelProgress + 1);
         }
         else
         {
-            selectedLevel = GameManager.instance.levels[GameManager.instance.selectedLevelIndex];
-            progressText.text = string.Format("Quote {0}/{1}", GameManager.instance.selectedLevelProgress + 1, selectedLevel.questions.Length);
+            selectedLevel = gameManager.levels[gameManager.selectedLevelIndex];
+            progressText.text = string.Format("Quote {0}/{1}", gameManager.selectedLevelProgress + 1, selectedLevel.questions.Length);
         }
-        levelText.text = GameManager.instance.selectedLevelName;
+        levelText.text = gameManager.selectedLevelName;
         SetQuestion();
     }
     private void SetQuestion()
     {
-        question = selectedLevel.questions[GameManager.instance.selectedLevelProgress];
+        question = selectedLevel.questions[gameManager.selectedLevelProgress];
         quoteText.text = "\"" + question.q + "\"";
         backgroundText.text = question.backgroundStory;
         if (backgroundText.text == selectedLevel.defaultBackgroundStory)
@@ -79,6 +81,7 @@ public class LevelManager : MonoBehaviour
         Button btn = n.GetComponent<Button>();
         btn.onClick.AddListener(() =>
         {
+            // gameManager.PlaySound("Pop1");
             UserAnswer(optionIndex);
         });
         n.GetComponentInChildren<TextMeshProUGUI>().text = optionText;
@@ -111,15 +114,26 @@ public class LevelManager : MonoBehaviour
                     optionButtons[i].interactable = false;
                 }
             }
+            gameManager.PlaySound("Bell");
             StartCoroutine(TransitionToResult());
         }
         else
         {
             // Debug.Log("INCORRECT");
+            gameManager.PlaySound("Pop1");
             Destroy(chancePanel.GetChild(0).gameObject);
             encouragementText.text = selectedLevel.incorrectResponse;
             encouragementTextAnimator.SetTrigger("In");
             optionButtons[optionIndex].interactable = false;
+            int interactableCount = 0;
+            for (int i = optionButtons.Count - 1; i >= 0; --i) {
+                if (optionButtons[i].interactable) {
+                    ++interactableCount;
+                }
+            }
+            if (interactableCount < 2) {
+                hintButton.interactable = false;
+            }
         }
     }
     IEnumerator TransitionToResult()
@@ -158,37 +172,41 @@ public class LevelManager : MonoBehaviour
                 }
             }
             hintButton.interactable = false;
+            gameManager.PlaySound("Bell High");
         }
     }
     public void UserSelectNext()
     {
-        GameManager.instance.selectedLevelProgress++;
-        GameManager.instance.SaveProgress();
-        if (GameManager.instance.selectedLevelProgress < selectedLevel.questions.Length)
+        gameManager.PlaySound("Pop1");
+        gameManager.selectedLevelProgress++;
+        gameManager.SaveProgress();
+        if (gameManager.selectedLevelProgress < selectedLevel.questions.Length)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else
         {
-            if (GameManager.instance.isEndless)
+            if (gameManager.isEndless)
             {
-                GameManager.instance.selectedLevelProgress = 0;
+                gameManager.selectedLevelProgress = 0;
             }
             else
             {
                 // Complete
-                finalQuoteAuthorText.text = "— " + GameManager.instance.selectedLevelName;
+                finalQuoteAuthorText.text = "— " + gameManager.selectedLevelName;
                 completePanel.SetActive(true);
             }
         }
     }
     public void UserSelectHome()
     {
+        gameManager.PlaySound("Pop1");
         Destroy(this);
         SceneManager.LoadScene("Menu");
     }
     public void UserSelectPause()
     {
+        gameManager.PlaySound("Pop2");
         isPause = !isPause;
         pausePanelAnimator.SetTrigger(isPause ? "In" : "Out");
     }
